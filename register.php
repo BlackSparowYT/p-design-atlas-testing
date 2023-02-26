@@ -13,7 +13,7 @@
 		<input type="password" name="password" id="password"><br><br>
 
 		<input type="submit" value="Register">
-        <p>Already have an account? <a href="login.phhp">Login</a></p>
+        <p>Already have an account? <a href="login.php">Login</a></p>
 	</form>
 
 	<?php
