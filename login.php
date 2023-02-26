@@ -1,41 +1,69 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <title>Login Form</title>
-  </head>
-  <body>
-      <h2>Login Form</h2>
-      <form method="POST" action="login.php">
-          <label for="username">Username:</label>
-          <input type="text" name="username" id="username"><br><br>
 
-          <label for="password">Password:</label>
-          <input type="password" name="password" id="password"><br><br>
+<head>
+    <title>Login Form</title>
+</head>
 
-          <label for="remember_me">Remember Me:</label>
-          <input type="checkbox" name="remember_me" id="remember_me"><br><br>
+<body>
+    <h2>Login Form</h2>
+    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username"><br><br>
 
-          <input type="submit" value="Login">
-      </form>
-  </body>
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password"><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+
+    <?php
+    session_start();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        // Connect to the MySQL database.
+        $servername = "localhost";
+        $db_username = "your_username";
+        $db_password = "your_password";
+        $dbname = "your_database_name";
+
+        $conn = mysqli_connect($servername, $db_username, $db_password, $dbname);
+        if (!$conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+
+        // Retrieve the salt for the user from the database.
+        $sql = "SELECT salt FROM users WHERE username='$username'";
+        $result = mysqli_query($conn, $sql);
+
+        if (mysqli_num_rows($result) === 1) {
+            $row = mysqli_fetch_assoc($result);
+            $salt = $row['salt'];
+
+            // Hash the user's password using the salt from the database.
+            $hashed_password = hash('sha256', $password . $salt);
+
+            // Check if the hashed password matches the one in the database.
+            $sql = "SELECT * FROM users WHERE username='$username' AND password='$hashed_password'";
+            $result = mysqli_query($conn, $sql);
+
+            if (mysqli_num_rows($result) === 1) {
+                // If the login is successful, create a session for the user and redirect them to another page.
+                $_SESSION['username'] = $username;
+                header("Location: home.php");
+                exit;
+            }
+        }
+
+        // If the login is unsuccessful, display an error message.
+        echo "Invalid username or password.";
+
+        mysqli_close($conn);
+    }
+    ?>
+</body>
+
 </html>
-
-<?php
-  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-      $username = $_POST['username'];
-      $password = $_POST['password'];
-      $remember_me = isset($_POST['remember_me']);
-
-      // Check the username and password against a database or some other authentication system.
-      // If they're valid, create a session for the user and redirect them to another page.
-      // If not, display an error message.
-
-      if ($remember_me) {
-          // If the "Remember Me" checkbox was checked, set a cookie that will remember the user's login.
-          setcookie('remembered_username', $username, time() + (60 * 60 * 24 * 30)); // The cookie will expire in 30 days.
-      } else {
-          // If the "Remember Me" checkbox was not checked, delete any previously-set cookie for the user.
-          setcookie('remembered_username', '', time() - 3600);
-      }
-  }
-?>
