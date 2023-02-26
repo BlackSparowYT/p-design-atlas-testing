@@ -25,18 +25,18 @@
         $password = $_POST['password'];
 
         // Connect to the MySQL database.
-        $servername = "localhost";
-        $db_username = "your_username";
-        $db_password = "your_password";
-        $dbname = "your_database_name";
+        $db_user = 'blackspa_design-atlas';
+        $db_password = '^Lh2ah,(5Y,-';
+        $database = 'blackspa_design-atlas';
+        $servername='localhost';
 
-        $conn = mysqli_connect($servername, $db_username, $db_password, $dbname);
+        $conn = new mysqli($servername, $db_user, $db_password, $database);
         if (!$conn) {
             die("Connection failed: " . mysqli_connect_error());
         }
 
         // Retrieve the salt for the user from the database.
-        $sql = "SELECT salt FROM users WHERE username='$username'";
+        $sql = "SELECT salt FROM user_testing WHERE username='$username'";
         $result = mysqli_query($conn, $sql);
 
         if (mysqli_num_rows($result) === 1) {
