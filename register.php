@@ -78,8 +78,8 @@
                 
                 // Set parameters
                 $param_email = $email;
-                $param_password = password_hash($password, $salt); // Creates a password hash
-                $param_username = $username;    
+                $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+                $param_username = $username;
                 
                 // Attempt to execute the prepared statement
                 if(mysqli_stmt_execute($stmt)){
@@ -102,7 +102,7 @@
 <?php echo file_get_contents("../html/header-footer/account-header.php") ?>
  
 <main class="register-page">
-    <tittle>Register | Design Atlas</title>
+    <title>Register | Design Atlas</title>
     <div class="wrapper">
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
