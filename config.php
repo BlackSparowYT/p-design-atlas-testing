@@ -6,8 +6,8 @@
     $database = 'blackspa_design-atlas';
     $servername = 'localhost';
 
-    $conn = new mysqli($servername, $db_user, $db_password, $database);
-    if (!$conn) {
+    $link = new mysqli($servername, $db_user, $db_password, $database);
+    if (!$link) {
         die("Connection failed: " . mysqli_connect_error());
     }
 

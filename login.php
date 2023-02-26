@@ -29,7 +29,7 @@
 
             // Retrieve the salt for the user from the database.
             $sql = "SELECT salt FROM user_testing WHERE username='$username'";
-            $result = mysqli_query($conn, $sql);
+            $result = mysqli_query($link, $sql);
 
             if (mysqli_num_rows($result) === 1) {
                 $row = mysqli_fetch_assoc($result);
@@ -39,8 +39,8 @@
                 $hashed_password = hash('sha256', $password . $salt);
 
                 // Check if the hashed password matches the one in the database.
-                $sql = "SELECT * FROM users WHERE username='$username' AND password='$hashed_password'";
-                $result = mysqli_query($conn, $sql);
+                $sql = "SELECT * FROM user_testing WHERE username='$username' AND password='$hashed_password'";
+                $result = mysqli_query($link, $sql);
 
                 if (mysqli_num_rows($result) === 1) {
                     // If the login is successful, create a session for the user and redirect them to another page.
@@ -53,7 +53,7 @@
             // If the login is unsuccessful, display an error message.
             echo "Invalid username or password.";
 
-            mysqli_close($conn);
+            mysqli_close($link);
         }
         ?>
     </body>
